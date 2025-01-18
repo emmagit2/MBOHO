@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Modal with Fade-in Animation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Disable scrolling when modal is active */
+        body.modal-active {
+            overflow: hidden;
+        }
+
+        /* Modal overlay */
+        .regmodal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        /* Modal content */
+        .regmodal {
+            display: flex;
+            flex-direction: row;
+            width: 40%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            max-width: 100%;
+        }
+
+        /* Close button */
+        .regmodal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: #333;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .regmodal-close:hover {
+            color: red;
+        }
+
+        /* Image section */
+        .regmodal-image {
+            flex: 1;
+            background: url('img/riced.jpeg') no-repeat center center/cover;
+            min-height: 250px;
+        }
+
+        /* Text section */
+        .regmodal-text {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .regmodal-text h2 {
+            margin: 0 0 10px;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .regmodal-text p {
+            margin: 0 0 20px;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .regmodal-text button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .regmodal-text button:hover {
+            background: #0056b3;
+        }
+
+        /* Section to scroll to */
+        #link-section {
+            margin: 50px;
+            padding: 50px;
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .regmodal {
+                flex-direction: column;
+                width: 90%;
+            }
+
+            .regmodal-image {
+                min-height: 150px;
+            }
+
+            .regmodal-text h2 {
+                font-size: 1.25rem;
+            }
+
+            .regmodal-text p {
+                font-size: 0.9rem;
+            }
+
+            .regmodal-text button {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* Show modal with animation */
+        .regmodal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal Overlay -->
+    <div class="regmodal-overlay" id="modal">
+        <div class="regmodal">
+            <!-- Close Button -->
+            <button class="regmodal-close" onclick="closeModal()">×</button>
+            <!-- Image Section -->
+            <div class="regmodal-image"></div>
+            <!-- Text Section -->
+            <div class="regmodal-text">
+                <h2>Welcome to Our Website!</h2>
+                <p>Discover more by scrolling down to the link section below.</p>
+                <button onclick="scrollToSection()">Go to Section</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Placeholder content -->
+    <div style="height: 120vh;"></div>
+
+    <!-- Link Section -->
+    <div id="link-section">
+        <h2>You've arrived at the section!</h2>
+        <p>This is the section you scrolled to. Welcome!</p>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Function to close the modal
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('show');
+            document.body.classList.remove('modal-active'); // Re-enable scrolling
+        }
+
+        // Function to close the modal and scroll to the section
+        function scrollToSection() {
+            closeModal(); // Close modal
+            document.getElementById('link-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Show the modal every time the page is loaded
+        window.onload = function () {
+            const modal = document.getElementById('modal');
+            modal.classList.add('show');
+            document.body.classList.add('modal-active'); // Disable background scrolling
+        };
+    </script>
+</body>
+</html>

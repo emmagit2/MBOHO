@@ -4,11 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Custom Navbar with Video Check</title>
-<link rel="stylesheet" href="bootstrap-4.6.1-dist/css/bootstrap.css">  
+<link rel="stylesheet" href="bootstrap-4.6.1-dist/css/bootstrap.css">
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+/> 
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital@0;1&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
+     @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital@0;1&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Sorts+Mill+Goudy:ital@0;1&display=swap');
+body{
+  overflow-x: hidden !important;
+}
 .hero-section{
     width: 100%;
     height: 80vh;
@@ -324,14 +333,23 @@ padding: 0px !important;
   background-color: rgb(0, 0, 0);
   margin: 3px 5px;
   display: inline-block;
-  width: 40px;
+  padding: 8px 12px;
   border-radius: 50px;
-  padding: 10px 15px;
+  transition: all 0.3s ease;
+ 
 }
 .social_links a span{
   color: white;
   text-align: center;
 
+}
+.social_links a:hover{
+  background-color: white;
+  border: 1px black solid;
+
+}
+.social_links a:hover span{
+  color: black;
 }
 
 
@@ -364,6 +382,15 @@ padding: 0px !important;
   height: auto;
  padding: 10px;
 }
+.she{
+  z-index: 10000;
+   position: relative;
+    width: 30px;
+     top: 80%;
+      left: 42%; 
+}
+
+
 .navbar_options{
   position: fixed;
   top: 1%;
@@ -452,6 +479,16 @@ border-radius: 50%;
   right: 0px;
   top: 2px;
 
+}
+.contact-info{
+  padding: 3px;
+}
+.contact-info span{
+  background-color: tomato;
+  padding: 10px;
+  margin: 3px 4px;
+  color: white;
+  border-radius: 6px;
 }
 .navbar_options .closeb button{
   border: none;
@@ -570,7 +607,7 @@ text-align: center;
       z-index: 1;
     }
     .events{
-padding: 50px 10px;
+padding: 50px 0px;
 margin-top: 5%;
     }
     .events button{
@@ -583,7 +620,6 @@ margin-top: 5%;
       border-radius: 30px;
     }
     .ty{
-      border-left: 2px solid #e63131;
       padding:20px;
       border-radius: 2px;
       
@@ -743,6 +779,8 @@ footer .subscribe input[type="text"] {
   font-size: 14px;
   width: 70%;
   margin-right: 10px;
+  border-radius: 10px;
+  border: 1px solid black;
 }
 
 footer .subscribe button {
@@ -751,11 +789,16 @@ footer .subscribe button {
   background-color: tomato;
   color: white;
   border: none;
+  margin: 3px 4px;
+  border-radius: 12px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 footer .subscribe button:hover {
-  background-color: #0056b3;
+  background-color: white;
+  color: tomato;
+  border: 1px solid tomato;
 }
 
 footer .contact p {
@@ -1022,6 +1065,15 @@ footer .social_links a:hover {
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             border: 1px solid #ddd;
         }
+        .quote {
+            color: rgb(6, 76, 6);
+            font-style: italic;
+            font-family: Sorts Mill Goudy;            
+            padding: 10px;
+            text-align: center;
+            font-size: 40px;
+            margin: 20px;
+        }
 
         .custom-file-upload {
             position: relative;
@@ -1133,6 +1185,164 @@ footer .social_links a:hover {
       margin: -7px 7%;
      }
         }
+             /* Disable scrolling when modal is active */
+             body.modal-active {
+            overflow: hidden;
+        }
+        
+        /* Modal overlay */
+        .regmodal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100000000000000000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        /* Modal content */
+        .regmodal {
+            display: flex;
+            flex-direction: row;
+            width: 40%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            max-width: 100%;
+        }
+
+        /* Close button */
+        .regmodal-close {
+            position: absolute;
+            top: -10px;
+            background-color: tomato;
+            right: 10px;
+            color: white;
+            border-radius: 0px 0px 12px 12px;
+            border: none;
+            font-size: 1.7rem;
+           
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.5s ease;
+        }
+
+        .regmodal-close:hover {
+           background-color: white;
+           border: 1px solid tomato;
+           color: tomato;
+        }
+
+        /* Image section */
+        .regmodal-image {
+            flex: 1;
+            background: url('img/riced.jpeg') no-repeat center center/cover;
+            min-height: 250px;
+        }
+
+        /* Text section */
+        .regmodal-text {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: left;
+        }
+
+        .regmodal-text h2 {
+          margin: 0 0 20px;
+            font-size: 1.5rem;
+            color: #333;
+            text-align: left;
+        }
+
+        .regmodal-text p {
+            margin: 0 0 20px;
+            font-size: 1rem;
+            color: #555;
+            text-align: left;
+        }
+
+        .regmodal-text button {
+            padding: 8px 15px;
+            background: tomato;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .regmodal-text button:hover {
+          background: white;
+          color: tomato;
+          border: 1px solid tomato;
+        }
+@media(max-width: 540px){
+  *, *::before, *::after {
+    overflow-x: hidden;
+  }
+  .she{
+    display: none;
+  }
+  .social_links{
+    margin: 0px auto;
+    padding: 10px;
+  }
+  .social_links a{
+    padding: 10px 16px;
+    margin-right: 5px;
+    margin: 3px 18px;
+  }
+  .contact-info{
+    border: none !important;
+  }
+}
+    
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .regmodal {
+                flex-direction: column;
+                width: 90%;
+            }
+
+            .regmodal-image {
+                min-height: 150px;
+            }
+
+            .regmodal-text h2 {
+                font-size: 1.25rem;
+            }
+
+            .regmodal-text p {
+                font-size: 0.9rem;
+
+            }
+
+            .regmodal-text button {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* Show modal with animation */
+        .regmodal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
 </style>
 
 </head>
@@ -1142,7 +1352,7 @@ footer .social_links a:hover {
   <img src="img/logo23.jpg">
 </div>
 <div class="nav_me">
-  <a href="#whoweare">Who we are</a>
+  <a href="#About_us">About Us</a>
   <a href="#whatwedo">What we do</a>
 </div>
 <div class="btn_nav" onclick="toggleMenu()">
@@ -1154,9 +1364,8 @@ footer .social_links a:hover {
 <div class="fullscreen-nav" id="fullscreenNav">
   <button class="close-btn" onclick="toggleMenu()">×</button>
   <a href="#Home">Home</a>
-  <a href="#About_us">About</a>
   <a href="#contact">Contact</a>
-  <a href="#whoweare">who we are</a>
+  <a href="#register">Register for Afaha Iman business</a>
   <a href="#whatwedo">What we do</a>
 
 </div>
@@ -1170,7 +1379,7 @@ footer .social_links a:hover {
         data-toggle="modal" data-target="#videoModal" style=" position: relative; left: 50%;">
      <span></span>
  </button><span style="padding:20px; text-transform: capitalize; font-size: 16px;"></span></div>
-      <h1>Afaha Nte Eniin; Ikpoon Ibeneke</h1>
+      <h1 class="animate__animated animate__fadeInDownBig">Afaha Nte Eniin; Ikpoon Ibeneke</h1>
   
     </div>
 
@@ -1182,7 +1391,7 @@ footer .social_links a:hover {
       Your browser does not support the video tag.
     </video>
   </div>
-  <div class="col-md-6 she" style="z-index: 10000; position: relative; width: 30px; top: 80%; left: 42%; ">
+  <div class="col-md-6 she">
     <img src="img/logo23.jpg" style="width: 30%;" >
 </div>
 </div>
@@ -1191,21 +1400,21 @@ footer .social_links a:hover {
 
   <div class="about_us" style="margin-top: 10%;" id="About_us">
     <div class="About_us">
-      <p class="make_it">About Us</p>
-      <p>
-        We are a socio-cultural organization focused on empowering the youth of Afah Iman, preserving our rich heritage, and fostering unity and pride through education, mentorship, and community-driven initiatives. Together, we build a brighter future while honoring the traditions that define us
+      <blockquote class="quote">
+        "The Mboho Afaha Iman Ibom is a collective effort of Iman Ibom elites."
+    </blockquote>
       </p>
+    
     </div>
   
   </div>
-  <div class="tion" id="whoweare">
-<div class="tion_text" >
-  <h1>Who we are </h1>
+  <div class="tion" id="whoweare" >
+<div class="tion_text"  data-aos="fade-right">
+  <h1>About Us</h1>
   <p>
-
-    We are a socio-cultural organization dedicated to preserving and promoting the rich heritage of Afaha Iman Ibom. Through cultural events, community development initiatives, sports, and business collaboration, we empower the youth and foster unity, pride, and progress within our community
-
-
+    A socio-cultural organization with a broad 
+    focus on empowerment and preserving our cultural heritage,
+     fostering growth and unity of Iman Ibom people. 
   </p>
 </div>
     </div>
@@ -1220,11 +1429,11 @@ footer .social_links a:hover {
 
   <!-- Vision & Mission Cards -->
   <div class="vision-mission-container">
-    <div class="card">
+    <div class="card" data-aos="fade-right">
       <h3>Vision</h3>
       <p>To inspire innovation and creativity in every individual through cultural education and modern digital solutions, bridging the gap between tradition and technology.</p>
     </div>
-    <div class="card">
+    <div class="card" data-aos="fade-left">
       <h3>Mission</h3>
       <p>Our mission is to foster a deeper understanding of cultural values while equipping future generations with the skills needed to thrive in a rapidly evolving digital world.</p>
     </div>
@@ -1236,7 +1445,7 @@ footer .social_links a:hover {
       <img src="img/BPC.png" alt="Event Image" style="width: 100%;">
     </div>
     <div class="col-md-6 ty">
-   <h3>Upcoming Event</h3>
+   <h3 >Upcoming Event</h3>
    <p>Register now for the Afaha Iman Business Proposal Competition and get the chance to win a grant prize to take your business to the next level! This is your opportunity to showcase your ideas, make an impact in the community, and receive the support you need to grow.
      Don’t miss out—Register now and start your journey towards success with Afaha Iman!</p>
      <form action="" id="registrationForm"  enctype="multipart/form-data">
@@ -1245,14 +1454,14 @@ footer .social_links a:hover {
           <span class="icon"><i class="fa fa-hand-o-right"></i></span>
           <strong>Important Notice:</strong>
       </p>
-      <p><strong>Please ensure that all the information you provide is accurate and complete. Incorrect information may affect your eligibility for the grant.</strong></p>
+      <p id="link-section"><strong>Please ensure that all the information you provide is accurate and complete. Incorrect information may affect your eligibility for the grant.</strong></p>
       <p style="padding: 10px;">
           <span class="icon"><i class="fa fa-hand-o-right"></i></span>
-          <strong>This application is exclusively for individuals who are originally from Mboho Afaha.</strong>
+          <strong>This application is exclusively for Iman Ibom people.</strong>
       </p>
       <p><strong>Providing inaccurate information may result in disqualification from the grant program.</strong></p>
   
-      <div class="row">
+      <div class="row" >
           <div class="col-md-6">
               <div class="input-fle">
                   <label for="firstname">First Name:</label>
@@ -1276,6 +1485,11 @@ footer .social_links a:hover {
           <label for="email">Email</label>
           <input type="email" id="email"  name="email" class="form-control" placeholder="Email" required>
       </div>
+
+      <div class="input-fle">
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" class="form-control" placeholder="Age" required>
+    </div>
   
       <div class="row">
           <div class="col-md-6">
@@ -1386,7 +1600,7 @@ footer .social_links a:hover {
 </div>
 
 <div class="tion tion2" id="whatwedo">
-  <div class="tion_text">
+  <div class="tion_text" data-aos="fade-left">
     <h1>What we do </h1>
     <p>We celebrate and preserve Afaha Iman Ibom’s culture through vibrant events, traditional ceremonies, community development projects, sports, and workshops. We also promote entrepreneurship and business growth to drive prosperity and enhance our community’s well-being..</p>
   </div>
@@ -1397,9 +1611,6 @@ footer .social_links a:hover {
   <footer class="footer">
     <div class="logo">
       <img src="img/logo23.jpg" alt="">
-      <p>
-        We are a socio-cultural organization empowering the youth of Afah Iman, preserving our heritage, and fostering unity through education and community initiatives.
-      </p>
     </div>
     <div class="links" id="contact">
       <h4>Important Links</h4>
@@ -1415,8 +1626,9 @@ footer .social_links a:hover {
     </div>
     <div class="contact">
       <h4>Contact Us</h4>
-      <p class="contact-info">Email: info@example.com</p>
-      <p class="contact-info">Phone: +123 456 7890</p>
+      <p class="contact-info"><span><i class="fa fa-inbox"></i></span>Mbohoafahaiman9@gmail.com</p>
+      <p class="contact-info"><span><i class="fa fa-phone"></i></span> (+234) 08025291883 </p>
+      <p class="contact-info"><span><i class="fa fa-phone"></i></span> (+234) 08145981824 </p>
       <div class="social_links">
         <a href="https://web.facebook.com/profile.php?id=61559934143712" target="_blank"><span><i class="fa fa-facebook-square"></i></span></a>
         <a href="https://www.instagram.com/mbohoafahaimanibom/" target="_blank"><span><i class="fa fa-instagram"></i></span></a>
@@ -1425,10 +1637,44 @@ footer .social_links a:hover {
     </div>
   </footer>
   
+  <div class="regmodal-overlay" id="modal">
+    <div class="regmodal">
+        <!-- Close Button -->
+        <button class="regmodal-close" onclick="closeModal()">×</button>
+        <!-- Image Section -->
+        <div class="regmodal-image"></div>
+        <!-- Text Section -->
+        <div class="regmodal-text">
+            <h2>Join the Afaha Iman Business Proposal Program!</h2>
+            <p>Register today and stand a chance to secure an exclusive grant to grow your business.
+               Turn your vision into reality—don’t miss this opportunity!"</p>
+            <button onclick="scrollToSection()">Register Now</button>
+        </div>
+    </div>
+</div>
 
 
+<script>
+  // Function to close the modal
+  function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.remove('show');
+      document.body.classList.remove('modal-active'); // Re-enable scrolling
+  }
 
+  // Function to close the modal and scroll to the section
+  function scrollToSection() {
+      closeModal(); // Close modal
+      document.getElementById('link-section').scrollIntoView({ behavior: 'smooth' });
+  }
 
+  // Show the modal every time the page is loaded
+  window.onload = function () {
+      const modal = document.getElementById('modal');
+      modal.classList.add('show');
+      document.body.classList.add('modal-active'); // Disable background scrolling
+  };
+</script>
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
 <script src="jquery.js"></script>
@@ -1605,7 +1851,7 @@ if (file) {
                     success: function (response) {
                         let result = JSON.parse(response);
                         if (result.success) {
-                            $("#responseMessage").html(`<p style="color: green;">${result.message}</p>`);
+                            $("#responseMessage").html(`<p style="color: tomato;">${result.message}</p>`);
                             $("#registrationForm")[0].reset(); // Reset form
                         } else {
                             $("#responseMessage").html(`<p style="color: red;">${result.message}</p>`);
@@ -1619,5 +1865,10 @@ if (file) {
         });
 
 </script> 
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init();
+  </script>
+
 </body>
 </html>

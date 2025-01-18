@@ -1,16 +1,45 @@
-<?php
+<?php 
 // Include the database connection
 include('db_connect.php');
 
-// SQL query to fetch user details from the registrations table
-$sql = "SELECT * FROM registrations";  // Replace with your actual table name
+// Start the session
+session_start();
+
+// Check session timeout for inactivity (10 minutes)
+$timeout = 600; // 10 minutes in seconds
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)) {
+    session_unset(); 
+    session_destroy(); 
+    header("Location: login.php"); // Redirect to login page
+    exit();
+}
+$_SESSION['LAST_ACTIVITY'] = time(); // Update last activity time
+
+// Check if admin is logged in
+if (!isset($_SESSION['admin_logged_in'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Initialize the search query
+$search_query = "";
+if (isset($_GET['search'])) {
+    $search_query = mysqli_real_escape_string($conn, $_GET['search']);
+}
+
+// SQL query with search condition
+$sql = "SELECT * FROM registrations WHERE 
+        firstname LIKE '%$search_query%' OR 
+        lastname LIKE '%$search_query%' OR 
+        business_name LIKE '%$search_query%' OR 
+        business_category LIKE '%$search_query%' OR
+        email LIKE '%$search_query%'";
 
 // Execute the query
 $result = mysqli_query($conn, $sql);
 
 // Check if the query was successful
 if ($result === false) {
-    // Query failed, output the error
     die("Query failed: " . mysqli_error($conn));
 }
 
@@ -32,116 +61,181 @@ echo '<!DOCTYPE html>
             background-color: #f4f4f4;
             font-family: Arial, sans-serif;
         }
-        .admin-dashboard {
-            margin: 20px;
+        .navbar {
+            margin-bottom: 20px;
         }
-        table th, table td {
-            vertical-align: middle;
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .table-container {
+            flex: 1 1 100%;
+            overflow-x: auto;
         }
         .table th {
             background-color: #007bff;
             color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #f2f2f2;
+        .table td {
+            vertical-align: middle;
         }
-        .btn-edit, .btn-delete {
-            padding: 5px 10px;
-            border-radius: 5px;
-            text-decoration: none;
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
         }
-        .btn-edit {
-            background-color: #28a745;
-            color: white;
+        .card {
+            flex: 1 1 calc(100% - 30px);
+            max-width: 48%;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
         }
-        .btn-edit:hover {
-            background-color: #218838;
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
         }
-        .btn-delete {
-            background-color: #dc3545;
-            color: white;
+        .card-body {
+            padding: 10px;
         }
-        .btn-delete:hover {
-            background-color: #c82333;
+        .card-body h5 {
+            font-size: 16px;
+            margin-bottom: 5px;
         }
-        img {
-            max-width: 100px;
-            border-radius: 5px;
+        .card-body p {
+            font-size: 14px;
+            color: #555;
+        }
+        @media (max-width: 768px) {
+            .card {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="admin-dashboard">
-    <h2 class="mb-4">Admin Dashboard - Registrations</h2>
-    <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Phone Number</th>
-                <th>Email</th>
-                <th>Village</th>
-                <th>Business Category</th>
-                <th>Business Name</th>
-                <th>Uploaded Image</th>
-                <th>Uploaded PDF</th>
-                <th>Social Media</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>';
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Admin Dashboard</a>
+    <form class="form-inline ml-auto" method="get">
+        <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search by name, email, business" aria-label="Search" value="' . htmlspecialchars($search_query) . '">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    <a href="logout.php" class="btn btn-danger ml-3">Logout</a>
+</nav>
 
-        // Fetch and display the data
-        while ($row = mysqli_fetch_assoc($result)) {
-            // Format image path and pdf file path
-            $imagePath = "uploads/" . $row['picture_path'];  // Assuming file is stored in an 'uploads' directory
-            $pdfPath = "uploads/" . $row['document_path'];    // Assuming PDF is stored similarly
+<!-- Main Content -->
+<div class="container-fluid">
+    <div class="row">
+        <!-- Table Section -->
+        <div class="table-container col-12">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Age</th>
+                        <th>Village</th>
+                        <th>Village Head</th>
+                        <th>Business Category</th>
+                        <th>Business Name</th>
+                        <th>Picture</th>
+                        <th>Social Media</th>
+                        <th>Document</th>
+                        <th>Submitted At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>';
 
-            // Social Media URLs
-            $socialLinks = $row['social_media_url'];
+$counter = 1; // Initialize a counter for numbering
 
-            echo '<tr>
-                    <td>' . htmlspecialchars($row['firstname']) . '</td>
-                    <td>' . htmlspecialchars($row['lastname']) . '</td>
-                    <td>' . htmlspecialchars($row['phonenum']) . '</td>
-                    <td>' . htmlspecialchars($row['email']) . '</td>
-                    <td>' . htmlspecialchars($row['village']) . '</td>
-                    <td>' . htmlspecialchars($row['business_category']) . '</td>
-                    <td>' . htmlspecialchars($row['business_name']) . '</td>
-                    <td>';
-            if ($imagePath && file_exists($imagePath)) {
-                echo '<img src="' . $imagePath . '" alt="Uploaded Image">';
+// Fetch and display the data
+while ($row = mysqli_fetch_assoc($result)) {
+    $social_media_url = !empty($row['social_media_url']) && strpos($row['social_media_url'], 'http') === false ? 'https://' . $row['social_media_url'] : $row['social_media_url'];
+    $document_path = !empty($row['document_path']) && strpos($row['document_path'], 'http') === false ? 'https://' . $row['document_path'] : $row['document_path'];
+
+    echo '<tr>
+            <td>' . $counter++ . '</td>
+            <td>' . htmlspecialchars($row['firstname']) . '</td>
+            <td>' . htmlspecialchars($row['lastname']) . '</td>
+            <td>' . htmlspecialchars($row['phonenum']) . '</td>
+            <td>' . htmlspecialchars($row['email']) . '</td>
+            <td>' . htmlspecialchars($row['age']) . '</td>
+            <td>' . htmlspecialchars($row['village']) . '</td>
+            <td>' . htmlspecialchars($row['village_head']) . '</td>
+            <td>' . htmlspecialchars($row['business_category']) . '</td>
+            <td>' . htmlspecialchars($row['business_name']) . '</td>
+            <td>';
+            if (!empty($row['picture_path'])) {
+                echo '<img src="' . htmlspecialchars($row['picture_path']) . '" alt="Picture" width="100">';
             } else {
-                echo 'No image uploaded';
+                echo 'No Image';
             }
             echo '</td>
-                  <td>';
-            if ($pdfPath && file_exists($pdfPath)) {
-                echo '<a href="' . $pdfPath . '" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-file-pdf"></i> View PDF</a>';
+            <td>';
+            if (!empty($social_media_url)) {
+                echo '<a href="' . $social_media_url . '" target="_blank"><i class="fas fa-link icon-link"></i></a>';
             } else {
-                echo 'No PDF uploaded';
+                echo 'No Social Media';
             }
             echo '</td>
-                  <td>';
-            if (!empty($socialLinks)) {
-                echo '<a href="' . $socialLinks . '" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-link"></i> View Profile</a>';
+            <td>';
+            if (!empty($document_path)) {
+                echo '<a href="' . $document_path . '" target="_blank"><i class="fas fa-eye icon-link"></i></a> 
+                      <a href="' . $document_path . '" download><i class="fas fa-download icon-link"></i></a>';
             } else {
-                echo 'No social media link';
+                echo 'No Document';
             }
             echo '</td>
-                  <td>
-                      <a href="edit.php?id=' . $row['id'] . '" class="btn-edit"><i class="fa fa-pencil-alt"></i> Edit</a>
-                      <a href="delete.php?id=' . $row['id'] . '" class="btn-delete" onclick="return confirm(\'Are you sure you want to delete this record?\');"><i class="fa fa-trash-alt"></i> Delete</a>
-                  </td>
-              </tr>';
-        }
+            <td>' . htmlspecialchars($row['submitted_at']) . '</td>
+            <td>
+                <a href="edit.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm">Edit</a>
+                <a href="delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>';
+}
 
-echo '</tbody>
-    </table>
+echo '      </tbody>
+            </table>
+        </div>
+
+        <!-- Cards Section -->
+        <div class="cards-container col-12">';
+
+$card_counter = 0; 
+mysqli_data_seek($result, 0);
+
+while ($row = mysqli_fetch_assoc($result)) {
+    if ($card_counter >= 5) {
+        break; 
+    }
+    echo '<div class="card">
+            <img src="' . htmlspecialchars($row['picture_path']) . '" alt="Picture">
+            <div class="card-body">
+                <h5>' . htmlspecialchars($row['firstname'] . ' ' . $row['lastname']) . '</h5>
+                <p>Age: ' . htmlspecialchars($row['age']) . '</p>
+                <p>Phone: ' . htmlspecialchars($row['phonenum']) . '</p>
+                <p>Submitted: ' . htmlspecialchars($row['submitted_at']) . '</p>
+            </div>
+        </div>';
+    $card_counter++;
+}
+
+echo '      </div>
+    </div>
 </div>
 
-<!-- Bootstrap JS & jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -149,5 +243,6 @@ echo '</tbody>
 </body>
 </html>';
 
+// Close the database connection
 mysqli_close($conn);
 ?>

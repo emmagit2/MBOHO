@@ -1,4 +1,6 @@
 <?php
+
+
 // CORS headers for cross-origin requests
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
@@ -17,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $business_category = htmlspecialchars(trim($_POST['businessCategory']));
     $business_name = htmlspecialchars(trim($_POST['businessName']));
     $social_media_url = htmlspecialchars(trim($_POST['socialMediaLink']));
+    $age = htmlspecialchars(trim($_POST['age'])); // Added age field
 
     $picture_path = "";
     $document_path = "";
@@ -44,9 +47,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     
-
-    $stmt = $conn->prepare("INSERT INTO registrations (firstname, lastname, phonenum, email, village, village_head, business_category, business_name, picture_path, social_media_url, document_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssssssss", $firstname, $lastname, $phonenum, $email, $village, $village_head, $business_category, $business_name, $picture_path, $social_media_url, $document_path);
+    $stmt = $conn->prepare("INSERT INTO registrations (firstname, lastname, phonenum, email, village, village_head, business_category, business_name, picture_path, social_media_url, document_path, age) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssssssss", $firstname, $lastname, $phonenum, $email, $village, $village_head, $business_category, $business_name, $picture_path, $social_media_url, $document_path, $age);
 
     if ($stmt->execute()) {
         echo json_encode(["success" => true, "message" => "Registration successful!"]);
@@ -58,4 +60,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>
