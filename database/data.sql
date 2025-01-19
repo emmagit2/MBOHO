@@ -4,6 +4,7 @@ CREATE TABLE registrations (
     lastname VARCHAR(100),
     phonenum VARCHAR(20),
     email VARCHAR(255),
+    age INT NOT NULL,
     village VARCHAR(100),
     village_head VARCHAR(100),
     business_category VARCHAR(50),
